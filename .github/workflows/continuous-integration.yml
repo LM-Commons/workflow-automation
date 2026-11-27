@@ -1,0 +1,33 @@
+name: "Continuous Integration"
+
+on:
+  workflow_call:
+
+jobs:
+  matrix:
+    name: Generate job matrix
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write # Creates checks
+      contents: read
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
+    steps:
+      - name: Gather CI configuration
+        id: matrix
+        uses: laminas/laminas-ci-matrix-action@v1 # v1.36
+
+  qa:
+    name: QA Checks
+    needs: [matrix]
+    runs-on: ${{ matrix.operatingSystem }}
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.matrix.outputs.matrix) }}
+    steps:
+      - name: ${{ matrix.name }}
+        uses: laminas/laminas-continuous-integration-action@v1 # v1.49
+        with:
+          job: ${{ matrix.job }}
