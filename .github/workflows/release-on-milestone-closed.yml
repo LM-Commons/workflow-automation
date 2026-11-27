@@ -1,18 +1,17 @@
 name: "Automated Releases"
 
 on:
-  milestone:
-    types:
-      - "closed"
+  workflow_call:
+    secrets:
+      GIT_AUTHOR_EMAIL:
+        required: true
+      GIT_AUTHOR_NAME:
+        required: true
+      ORGANIZATION_ADMIN_TOKEN:
+        required: true
+      SIGNING_SECRET_KEY:
+        required: true
 
-#jobs:
-#  release:
-#    uses: laminas/workflow-automatic-releases/.github/workflows/release-on-milestone-closed.yml@1.x
-#    secrets:
-#      GIT_AUTHOR_EMAIL: ${{ secrets.GIT_AUTHOR_EMAIL }}
-#      GIT_AUTHOR_NAME: ${{ secrets.GIT_AUTHOR_NAME }}
-#      ORGANIZATION_ADMIN_TOKEN: ${{ secrets.ORGANIZATION_ADMIN_TOKEN }}
-#      SIGNING_SECRET_KEY: ${{ secrets.SIGNING_SECRET_KEY }}
 jobs:
   release:
     name: "GIT tag, release & create merge-up PR"
